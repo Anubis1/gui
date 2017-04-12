@@ -37,9 +37,7 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
-			['label' => 'Niga', 'url' => ['/site/myniga']],
-			['label' => 'New Niga', 'url' => ['/site/entry']],
-           ['label' => 'Sql nigas', 'url' => ['/site/country/index']],
+			['label' => 'New music', 'url' => ['/site/new']],
         ],
     ]);
     NavBar::end();

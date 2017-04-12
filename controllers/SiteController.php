@@ -4,94 +4,61 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
-use app\models\EntryForm;
 use yii\data\Pagination;
-use app\models\Country;
+use yii\web\UploadedFile;
+use app\models\UploadForm;
+
 class SiteController extends Controller
 {
-    public function behaviors()
+	public $layout = 'main';
+
+	
+	public function actionIndex($message = 'Привет')
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-    }
-
-public function actionIndex()
-    {
-        $query = Country::find();
-
-        $pagination = new Pagination([
-            'defaultPageSize' => 5,
-            'totalCount' => $query->count(),
-        ]);
-
-        $countries = $query->orderBy('name')
-            ->offset($pagination->offset)
-            ->limit($pagination->limit)
-            ->all();
-
-        return $this->render('index', [
-            'countries' => $countries,
-            'pagination' => $pagination,
-        ]);
+        return $this->render('index', ['message' => $message]);
     }
 	
-    public function actionEntry()
+	  public function actionNew($message = 'New')
     {
-        $model = new EntryForm();
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            // данные в $model удачно проверены
-
-            // делаем что-то полезное с $model ...
- 
-            return $this->render('entry-confirm', ['model' => $model]);
-        } else {
-            // либо страница отображается первый раз, либо есть ошибка в данных
-            return $this->render('entry', ['model' => $model]);
+		$message="New music add to grimey.ru.";
+		$model = new UploadForm();
+		
+        if (Yii::$app->request->isPost) {
+            $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
+            if (true) {
+				   //$file_s=$model->upload();
+				   //exit ($model->upload());
+			     return $this->render('new', ['success'=>$model->upload()]);
+                return;
+            }
         }
+	  return $this->render('new', ['model'=>$model]);
+	
+        // return $this->render('new', ['model'=>$model],['new' => $message]);  
+		 
+		 
+	
+
+   } 
+   
+   
+   public function actionUpload()
+    {
+        
+ 
+        return $this->render('upload', ['model' => $model]);
     }
-	
-	
-	public function actionMyniga($message='niga !'){
-		
-		return $this->render('myniga',['message'=>$message]);
-		
-	}
+   
+   
+    }
+
 	
 	
 	
 	
 	
 	
-}
+	
+	
+	
+
